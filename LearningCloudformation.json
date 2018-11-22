@@ -1,0 +1,69 @@
+{
+"AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "",
+    "Metadata": {
+
+    },
+    "Parameters": {
+    
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+        
+        "MyVPC": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": "10.0.0.0/16",
+          }
+        },
+        
+        "PublicSubnet": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": "us-west-1a",
+            "VpcId": { "Ref" : "MyVPC" },
+            "CidrBlock": "10.0.1.0/24",
+          }
+        },
+        
+        "igwName": {
+          "Type": "AWS::EC2::InternetGateway",
+          "Properties": {
+          }
+        },
+
+        "AttachGateway": {
+          "Type": "AWS::EC2::VPCGatewayAttachment",
+          "Properties": {
+            "VpcId": { "Ref" : "MyVPC" },
+            "InternetGatewayId": { "Ref": "igwName" }
+          }
+        },
+        
+        "PublicRT": {
+          "Type": "AWS::EC2::RouteTable",
+          "Properties": {
+            "VpcId": { "Ref" : "MyVPC" }
+          }
+        },
+        
+        "PublicRTDG": {
+          "Type": "AWS::EC2::Route",
+          "Properties": {
+            "RouteTableId": { "Ref" : "PublicRT" },
+            "DestinationCidrBlock": "0.0.0.0/0",
+            "GatewayId": { "Ref" : "igwName" }
+          }
+        }      
+        
+
+    },
+    "Outputs": {
+
+    }
+}
